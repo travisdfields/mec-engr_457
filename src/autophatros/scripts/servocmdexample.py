@@ -49,7 +49,7 @@ start_val = 1
 # this rate is not equal to the rate (1/period) of the
 # triangular wave but instead is just a parameter controlling
 # how fast the command is incremented/decremented
-sweep_speed = 25 # Hz
+sweep_speed = 250 # Hz
 
 # all ROS init stuff has been moved to the leftmost scope
 # inc order to get the shutdown working properly so that
@@ -69,7 +69,8 @@ rospy.init_node('servosweep')
 # all queue sizes should be set to 1, in general, we do not
 # care to buffer messages and want to use the most recent
 # message even if that means we lose old information
-pub = rospy.Publisher('servocmd', Servo, queue_size=1)
+pub = rospy.Publisher('servocmd', Servo, queue_size=100)
+
 
 def servo_demo():
 
@@ -82,7 +83,8 @@ def servo_demo():
 
 	value = start_val
 	sign = 1
-
+	timer = rospy.get_time()
+	timer2 = timer
 	while not rospy.is_shutdown():
 
 		# fill up the message header first
@@ -102,7 +104,9 @@ def servo_demo():
 
 		# publish the message to trigger the driver callback
 		pub.publish(cmd)
-
+		timer2 = rospy.get_time()
+		print(1/(timer2 - timer))
+		timer = timer2
 		rate.sleep()
 
 def safe_shutdown():
