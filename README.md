@@ -1,6 +1,18 @@
 ## mec-engr_457
 *This repository is provided as a framework for the course MEC-ENGR 00457 taught at the University of Missouri - Kansas City.*
 
+### Permissions Edit - Added Nov. 1, 2021
+In order to grant the C++ PCA9685 driver (servo commands) access to a system folder, perform the following actions.
+
+sudo nano /boot/config.txt
+
+Go to the bottom of the file and add the following line:
+dtoverlay=i2c-pwm-pca9685a
+
+Hit Ctrl-X, then hit Y, and enter to save.
+
+Reboot the Pi and your servo driver should work correctly. If you see 4 "Unable to Init Channel XX" then there is still a permissions issue. Please discuss with Dr. Fields.
+
 ### Brief Introduction
 MEC-ENGR 00457 Mechatronics System Design is a course offered at the University of Missouri - Kansas City.  Students enrolled in this course are tasked with developing a control system and learning to fly a quadrotor; skills which they must demonstrate during the final exam in the form of a flight demonstration.
 
