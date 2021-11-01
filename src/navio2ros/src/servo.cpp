@@ -6,13 +6,19 @@
 #include "Util.h"
 
 #include "ros/ros.h"
-#include <me457common/PWM.h>
+#include <me457common/Servo.h>
 
-#define MAX_NUM_PINS 14
-#define PWM_PERIOD 50
+#define MAX_NUM_PINS 4
+#define PWM_PERIOD 300
 
-#define MAX_DUTY_CYCLE 2.000
-#define MIN_DUTY_CYCLE 1.000
+#define MAX_DUTY_CYCLE 2.200
+#define MIN_DUTY_CYCLE 0.800
+
+#define MAX_IN_CMD 100.0
+#define MIN_IN_CMD 0.000
+
+float m = (MAX_DUTY_CYCLE - MIN_DUTY_CYCLE)/(MAX_IN_CMD - MIN_IN_CMD);
+float b = MAX_DUTY_CYCLE - MAX_IN_CMD*m;
 
 // set true to run the calibration
 const bool cal = false;
@@ -29,14 +35,16 @@ namespace
 }
 
 
-void motorCallback(const me457common::PWM msg)
+void motorCallback(const me457common::Servo msg)
 {
 
 	// we assume that the maximum number of values are always passed
 	// even if some channels are not being used
 	for( int i = 0 ; i < MAX_NUM_PINS ; i++ )
 	{
-		pwm_out.set_duty_cycle(i,msg.channel[i]);
+		float out_cmd = m*msg.channel[i] + b;
+		printf("Cmd %f \n", out_cmd);
+		pwm_out.set_duty_cycle(i,out_cmd);
 	}
 
 }
@@ -106,7 +114,7 @@ int main(int argc, char ** argv)
 
 	}
 
-	ros::Subscriber sub = n.subscribe<me457common::PWM>("motorcommand",1000,motorCallback);
+	ros::Subscriber sub = n.subscribe<me457common::Servo>("servocmd",1000,motorCallback);
 
 	ros::spin();
 

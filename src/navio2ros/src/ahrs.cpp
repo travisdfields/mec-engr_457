@@ -29,12 +29,10 @@ namespace
 void ahrs_callback(const me457common::IMU msg)
 {
 
-	const float dt = 1/250;
-
+	const float dt = 0.004;
 	mpu_madgwick.updateMadgwickIMU(msg.gyroscope.x,msg.gyroscope.y,msg.gyroscope.z,msg.accelerometer.x,msg.accelerometer.y,msg.accelerometer.z,dt);
-
 	mpu_madgwick.getEuler(&roll_madgwick,&pitch_madgwick,&yaw_madgwick);
-
+	// printf("Roll %f\n", roll_madgwick);
 }
 
 // had to modify main to include argc and argv according to ROS tutorial
@@ -50,7 +48,7 @@ int main(int argc, char **argv)
 
 	me457common::AHRS ahrs;
 
-	ros::Rate loop_rate(100);
+	ros::Rate loop_rate(250);
 
 	// new while condition (borrowed from talker.cpp)
 	while(ros::ok())
