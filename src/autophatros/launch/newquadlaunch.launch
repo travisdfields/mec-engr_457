@@ -1,0 +1,10 @@
+<launch>
+
+	<node pkg="autophatros" name="imupub" type="imu.py"></node>
+	<node pkg="navio2ros" name="servodriver" type="servo" launch-prefix="sudo -E"></node>
+	<node pkg="autophatros" name="rcpub" type="rc.py"></node>
+	<node pkg="me457common" name="logger" type="logger.py"></node>
+	<node pkg="navio2ros" name="ahrs" type="ahrs" output="screen"></node>
+
+
+</launch>
