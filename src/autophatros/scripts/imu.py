@@ -85,13 +85,15 @@ def imu_publisher():
 			message.magnetometer.header.stamp  = message.accelerometer.header.stamp
 
 			# Package the imu data into IMU message format and publish
-			message.gyroscope.x = IMUchip.gxRaw
-			message.gyroscope.y = IMUchip.gyRaw
-			message.gyroscope.z = IMUchip.gzRaw
+			# Gyro range - +/-250deg/s with 16-bit, converting to rad/s here as well
+			message.gyroscope.x = IMUchip.gxRaw*0.000133158
+			message.gyroscope.y = IMUchip.gyRaw*0.000133158
+			message.gyroscope.z = IMUchip.gzRaw*0.000133158
 
-			message.accelerometer.x = IMUchip.axRaw
-			message.accelerometer.y = IMUchip.ayRaw
-			message.accelerometer.z = IMUchip.azRaw
+			# Converting ~1g = 16000 to m/s^2 (1/16000*9.81)
+			message.accelerometer.x = IMUchip.axRaw*0.000613125
+			message.accelerometer.y = IMUchip.ayRaw*0.000613125
+			message.accelerometer.z = IMUchip.azRaw*0.000613125
 
 			message.magnetometer.x = IMUchip.mxRaw
 			message.magnetometer.y = IMUchip.myRaw
